@@ -21,11 +21,13 @@ jobs:
       uses: nuget/setup-nuget@v1
       with:
         nuget-version: '5.x'
+    - name: Nuget restore  
       run: nuget restore KK.DeepCharacterGenerator.sln
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v1
+    - name: Build
       run: MSBuild.exe -p:Configuration=Release
-    - name: Artifact
+    - name: Make artifact
       uses: actions/upload-artifact@v1.0.0
       with:
         name: artifact
