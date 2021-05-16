@@ -1,0 +1,35 @@
+name: .NET
+
+on:
+  push:
+    branches: [ $default-branch ]
+  pull_request:
+    branches: [ $default-branch ]
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: windows-2019
+
+    steps:
+    - name: Checkout 
+      uses: actions/checkout@v2
+      with:
+        repository: "tropical-362827/KoikatuGen-Plugin"
+        token: ${{ github.token }}
+    - name: Setup Nuget
+      uses: nuget/setup-nuget@v1
+      with:
+        nuget-version: '5.x'
+    - name: Nuget restore  
+      run: nuget restore KK.DeepCharacterGenerator.sln
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v1
+    - name: Build
+      run: MSBuild.exe -p:Configuration=Release
+    - name: Make artifact
+      uses: actions/upload-artifact@v1.0.0
+      with:
+        name: artifact
+        path: bin\KK_DeepCharacterGenerator.dll
