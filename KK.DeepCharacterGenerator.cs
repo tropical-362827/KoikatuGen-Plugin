@@ -28,10 +28,10 @@ namespace KK_Plugins
         {
             
             var parentCat = MakerConstants.Body.All;
-            var cat = new MakerCategory(parentCat.CategoryName, "DeepCharacterGeneratorCategory", parentCat.Position + 5, "Generate");
+            var cat = new MakerCategory(parentCat.CategoryName, "DeepCharacterGeneratorCategory", parentCat.Position + 5, "キャラ生成");
             e.AddSubCategory(cat);
 
-            var randButton = e.AddControl(new MakerButton("Generate", cat, this));
+            var randButton = e.AddControl(new MakerButton("キャラクターを生成する", cat, this));
 
             string dllpath = System.Reflection.Assembly.GetExecutingAssembly().Location;
             string dlldir = Path.GetDirectoryName(dllpath);
@@ -42,13 +42,13 @@ namespace KK_Plugins
             {
                 weightsdir_child[i] = Path.GetFileName( weightsdir[i] );
             }
-            var paramsDropdown = e.AddControl(new MakerDropdown("Parameter", weightsdir_child, cat, 0, this));
-            var oddeyeToggle = e.AddControl(new MakerToggle(cat, "Allow odd eye", false, this));
-            var facepaintToggle = e.AddControl(new MakerToggle(cat, "Allow face paint", false, this));
+            var paramsDropdown = e.AddControl(new MakerDropdown("使う学習パラメーター", weightsdir_child, cat, 0, this));
+            var oddeyeToggle = e.AddControl(new MakerToggle(cat, "オッドアイ(非対称な瞳)を許可する", false, this));
+            var facepaintToggle = e.AddControl(new MakerToggle(cat, "フェイスペイントの使用を許可する", false, this));
             e.AddControl(new MakerSeparator(cat, this));
-            var generateBody = e.AddControl(new MakerToggle(cat, "Generate body values", true, this));
-            var generateFace = e.AddControl(new MakerToggle(cat, "Generate face values", true, this));
-            var generateHair = e.AddControl(new MakerToggle(cat, "Generate hair values", true, this));
+            var generateBody = e.AddControl(new MakerToggle(cat, "体型の変更を許可する", true, this));
+            var generateFace = e.AddControl(new MakerToggle(cat, "顔の変更を許可する", true, this));
+            var generateHair = e.AddControl(new MakerToggle(cat, "髪型の変更を許可する", true, this));
 
 
             randButton.OnClick.AddListener(() =>
