@@ -4,7 +4,7 @@ A Koikatu Plugin to Generate Koikatu Character by Using Deep Learning Model / �
 ## このプログラムは? / About this program
 このプログラムは, コイカツ公式アップローダーのデータを使い[KoikatuGen](https://github.com/tropical-362827/KoikatuGen)で学習した機械学習モデルの重みファイルを使って, ゲーム内から直接キャラを生成できるようにするコイカツMODです. (学習済みパラメータをセットで配っているのでそのまま使えます)
 
-![](https://i.imgur.com/HVbzMaW.png)
+![](https://i.imgur.com/GEC068x.png)
 
 ## 必要なMOD / Requirements
 [KK_Plugins](https://github.com/DeathWeasel1337/KK_Plugins)をベースに作っているので, それと同じMODが必要となります. つまり,
@@ -18,7 +18,7 @@ A Koikatu Plugin to Generate Koikatu Character by Using Deep Learning Model / �
 [リリースページ](https://github.com/tropical-362827/KoikatuGen-Plugin/releases)から`KoikatuGen-Plugin.zip`をダウンロードし解凍した後, コイカツフォルダ内の `BepInEx` に上書きコピーしてください.
 
 ## How to use / 使い方
-MODを入れた後キャラメイクを起動すると, 体型をいじるメニューに`Generate`という欄が追加されます.
+MODを入れた後キャラメイクを起動すると, 体型をいじるメニューに`キャラ生成`という欄が追加されます. その中の`キャラクターを生成する`を押します.
 
 ### 学習Epochについて
 Epochは機械学習の分野で学習回数を表す単位です. このEpoch数が多ければ大きいほど学習データに近いキャラが生成される一方で, 個性的なキャラクターが生成できなくなります.
