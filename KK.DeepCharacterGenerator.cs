@@ -19,7 +19,7 @@ namespace KK_Plugins
     {
         public const string GUID = "tropical-362827.deepcharactergenerator";
         public const string PluginName = "Deep Character Generator";
-        public const string PluginNameInternal = "KK" + "_DeepCharacterGenerator";
+        public const string PluginNameInternal = "KKS" + "_DeepCharacterGenerator";
         public const string Version = "2.0";
 
         internal void Main() => MakerAPI.RegisterCustomSubCategories += MakerAPI_RegisterCustomSubCategories;
