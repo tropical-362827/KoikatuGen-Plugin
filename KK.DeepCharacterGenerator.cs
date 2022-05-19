@@ -4,8 +4,10 @@ using KKAPI.Maker;
 using KKAPI.Maker.UI;
 using System.Collections.Generic;
 using System.IO;
-using PseudoRandom;
 using System;
+using MathNet.Numerics;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.Distributions;
 
 namespace KK_Plugins
 {
@@ -59,24 +61,25 @@ namespace KK_Plugins
                 allowOddeye = oddeyeToggle.Value;
                 allowFacePaint = facepaintToggle.Value;
 
-                float[,] weight = LoadCSV( System.IO.Path.Combine( choosed_dir, "weight.csv" ) );
-                float[,] bias = LoadCSV( System.IO.Path.Combine( choosed_dir, "bias.csv" ) );
+                double[,] weight = LoadCSV( System.IO.Path.Combine( choosed_dir, "weight.csv" ) );
+                double[,] bias = LoadCSV( System.IO.Path.Combine( choosed_dir, "bias.csv" ) );
 
                 System.Random random = new System.Random();
-                MersenneTwister mt = new MersenneTwister((ulong)random.Next());
 
-                float[,] mu = GaussMatrix(1, 800, mt, 0, 1.0f);
-                float[,] sigma = Exp(GaussMatrix(1, 800, mt, 0, 0.5f));
-                float[,] epsilon = GaussMatrix(1, 800, mt, 0, 1.0f);
+                var M = Matrix<double>.Build;
 
-                float[,] ma = GenerateLatent(mt, mu, sigma, epsilon);
-                float[,] mb = weight;
-                float[,] mc = Add( Dot(ma, mb), bias );
-                mc = Sigmoid(mc);
-                float[] kk_vector = new float[mc.GetLength(1)];
+                var mu = M.Random(1, 800);
+                var sigma = Matrix<double>.Exp(M.Random(1, 800, new Normal(0, 0.5f)));
+                var epsilon = M.Random(1, 800);
+                var ma = mu + Matrix<double>.Exp(sigma * 0.5).PointwiseMultiply(epsilon);
+                var mb = M.DenseOfArray(weight);
+                var mc = ma * mb + M.DenseOfArray(bias);
+                mc = mc.Map(SpecialFunctions.Logistic);
+
+                float[] kk_vector = new float[mc.ColumnCount];
                 for(int i=0; i<kk_vector.Length; i++)
                 {
-                    kk_vector[i] = mc[0, i];
+                    kk_vector[i] = (float)mc[0, i];
                 }
 
                 if (generateBody.Value) GeneratorBody.GenerateBody(kk_vector);
@@ -87,24 +90,24 @@ namespace KK_Plugins
             });
         }
 
-        public static float[,] LoadCSV(string filepath)
+        public static double[,] LoadCSV(string filepath)
         {
-            List<List<float>> matrix_list = new List<List<float>>();
+            List<List<double>> matrix_list = new List<List<double>>();
             StreamReader reader = new StreamReader(filepath, System.Text.Encoding.GetEncoding("UTF-8"));
 
             while (reader.Peek() >= 0)
             {
                 string[] cols = reader.ReadLine().Split(',');
-                List<float> row = new List<float>();
+                List<double> row = new List<double>();
                 for (int i = 0; i < cols.Length; i++)
                 {
-                    row.Add(float.Parse(cols[i]));
+                    row.Add(double.Parse(cols[i]));
                 }
                 matrix_list.Add(row);
             }
             reader.Close();
 
-            float[,] matrix = new float[matrix_list.Count, matrix_list[0].Count];
+            double[,] matrix = new double[matrix_list.Count, matrix_list[0].Count];
             for (int i = 0; i < matrix.GetLength(0); i++)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
@@ -136,6 +139,17 @@ namespace KK_Plugins
             {
                 return value;
             }
+        }
+
+        // generates a sampling value following the categorical distribution.
+        public static int RandomCategorial(float[] vector)
+        {
+            double[] vector_ = new double[vector.Length];
+            for(int i=0; i<vector.Length; i++)
+            {
+                vector_[i] = Math.Exp(vector[i]);
+            }
+            return Categorical.Sample(vector_);
         }
 
         #region Random utils

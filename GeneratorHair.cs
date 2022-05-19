@@ -1,4 +1,4 @@
-﻿using PseudoRandom;
+﻿
 using UnityEngine;
 
 namespace KK_Plugins
@@ -10,8 +10,6 @@ namespace KK_Plugins
             public static void GenerateHair(float[] vector)
             {
                 var hair = Custom.hair;
-                System.Random random = new System.Random();
-                MersenneTwister mt = new MersenneTwister((ulong)random.Next());
                 int n;
 
                 // scalar values
@@ -32,10 +30,10 @@ namespace KK_Plugins
                 }
 
                 // categorical values
-                hair.glossId = RandomCategorial(GetRange(vector, 563, 9), mt);
-                hair.parts[0].id = RandomCategorial(GetRange(vector, 985, 69), mt);
-                hair.parts[1].id = RandomCategorial(GetRange(vector, 1052, 81), mt);
-                hair.parts[2].id = RandomCategorial(GetRange(vector, 1123, 10), mt);
+                hair.glossId = RandomCategorial(GetRange(vector, 563, 9));
+                hair.parts[0].id = RandomCategorial(GetRange(vector, 985, 69));
+                hair.parts[1].id = RandomCategorial(GetRange(vector, 1052, 81));
+                hair.parts[2].id = RandomCategorial(GetRange(vector, 1123, 10));
 
                 hair.parts[0].id = AdjustEmocreId(hair.parts[0].id, 58, 141);
                 hair.parts[1].id = AdjustEmocreId(hair.parts[1].id, 70, 129);

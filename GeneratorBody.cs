@@ -1,5 +1,4 @@
-﻿using PseudoRandom;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace KK_Plugins
 {
@@ -11,8 +10,6 @@ namespace KK_Plugins
             public static void GenerateBody(float[] vector)
             {
                 var body = Custom.body;
-                System.Random random = new System.Random();
-                MersenneTwister mt = new MersenneTwister((ulong)random.Next()); 
                 int n;
 
                 // scalar values
@@ -52,11 +49,11 @@ namespace KK_Plugins
                 // };
 
                 // categorical velues
-                body.skinId = RandomCategorial( GetRange( vector, 526, 1 ), mt );
-                body.detailId = RandomCategorial( GetRange( vector, 527, 4 ), mt );
-                body.sunburnId = RandomCategorial( GetRange( vector, 531, 11 ), mt );
-                body.nipId = RandomCategorial( GetRange( vector, 542, 7 ), mt );
-                body.underhairId = RandomCategorial( GetRange( vector, 549, 14 ), mt );
+                body.skinId = RandomCategorial( GetRange( vector, 526, 1 ));
+                body.detailId = RandomCategorial( GetRange( vector, 527, 4 ));
+                body.sunburnId = RandomCategorial( GetRange( vector, 531, 11 ));
+                body.nipId = RandomCategorial( GetRange( vector, 542, 7 ));
+                body.underhairId = RandomCategorial( GetRange( vector, 549, 14 ));
                 // body.paintId = new int[] {
                 //     RandomCategorial( GetRange( vector, 870, 37 ), mt ),
                 //     RandomCategorial( GetRange( vector, 907, 38 ), mt )

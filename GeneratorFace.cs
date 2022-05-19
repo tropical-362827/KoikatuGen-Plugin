@@ -1,5 +1,4 @@
-﻿using PseudoRandom;
-using UnityEngine;
+﻿using UnityEngine;
 
 namespace KK_Plugins
 {
@@ -11,8 +10,6 @@ namespace KK_Plugins
             public static void GenerateFace(float[] vector)
             {
                 var face = Custom.face;
-                System.Random random = new System.Random();
-                MersenneTwister mt = new MersenneTwister((ulong)random.Next());
                 int n;
 
                 // scalar values;
@@ -63,25 +60,25 @@ namespace KK_Plugins
                 // face.baseMakeup.paintLayout[1] = new Color(vector[n++], vector[n++], vector[n++], vector[n++]);
 
                 // categorical values
-                face.detailId = allowFacePaint ? RandomCategorial(GetRange(vector, 305, 6), mt) : 0;
-                face.eyebrowId = RandomCategorial(GetRange(vector, 305, 17), mt);
-                face.noseId = RandomCategorial(GetRange(vector, 328, 7), mt);
-                face.hlUpId = RandomCategorial(GetRange(vector, 335, 53), mt);
-                face.hlUpId = RandomCategorial(GetRange(vector, 386, 35), mt);
-                face.whiteId = RandomCategorial(GetRange(vector, 420, 5), mt);
-                face.eyelineUpId = RandomCategorial(GetRange(vector, 425, 62), mt);
-                face.eyelineDownId = RandomCategorial(GetRange(vector, 487, 22), mt);
-                face.moleId = RandomCategorial(GetRange(vector, 509, 4), mt);
-                face.lipLineId = RandomCategorial(GetRange(vector, 513, 7), mt);
-                face.foregroundEyes = (byte)RandomCategorial(GetRange(vector, 520, 3), mt);  // why byte?
-                face.foregroundEyebrow = (byte)RandomCategorial(GetRange(vector, 523, 3), mt);
-                face.pupil[0].id = RandomCategorial(GetRange(vector, 572, 95), mt);
-                face.pupil[0].gradMaskId = RandomCategorial(GetRange(vector, 665, 4), mt);
-                face.pupil[1].id = RandomCategorial(GetRange(vector, 669, 95), mt);
-                face.pupil[1].gradMaskId = RandomCategorial(GetRange(vector, 762, 4), mt);
-                face.baseMakeup.eyeshadowId = RandomCategorial(GetRange(vector, 766, 10), mt);
-                face.baseMakeup.cheekId = RandomCategorial(GetRange(vector, 776, 10), mt);
-                face.baseMakeup.lipId = RandomCategorial(GetRange(vector, 786, 9), mt);
+                face.detailId = allowFacePaint ? RandomCategorial(GetRange(vector, 305, 6)) : 0;
+                face.eyebrowId = RandomCategorial(GetRange(vector, 305, 17));
+                face.noseId = RandomCategorial(GetRange(vector, 328, 7));
+                face.hlUpId = RandomCategorial(GetRange(vector, 335, 53));
+                face.hlUpId = RandomCategorial(GetRange(vector, 386, 35));
+                face.whiteId = RandomCategorial(GetRange(vector, 420, 5));
+                face.eyelineUpId = RandomCategorial(GetRange(vector, 425, 62));
+                face.eyelineDownId = RandomCategorial(GetRange(vector, 487, 22));
+                face.moleId = RandomCategorial(GetRange(vector, 509, 4));
+                face.lipLineId = RandomCategorial(GetRange(vector, 513, 7));
+                face.foregroundEyes = (byte)RandomCategorial(GetRange(vector, 520, 3));  // why byte?
+                face.foregroundEyebrow = (byte)RandomCategorial(GetRange(vector, 523, 3));
+                face.pupil[0].id = RandomCategorial(GetRange(vector, 572, 95));
+                face.pupil[0].gradMaskId = RandomCategorial(GetRange(vector, 665, 4));
+                face.pupil[1].id = RandomCategorial(GetRange(vector, 669, 95));
+                face.pupil[1].gradMaskId = RandomCategorial(GetRange(vector, 762, 4));
+                face.baseMakeup.eyeshadowId = RandomCategorial(GetRange(vector, 766, 10));
+                face.baseMakeup.cheekId = RandomCategorial(GetRange(vector, 776, 10));
+                face.baseMakeup.lipId = RandomCategorial(GetRange(vector, 786, 9));
                 // face.baseMakeup.paintId[0] = RandomCategorial(GetRange(vector, 795, 38), mt);
                 // face.baseMakeup.paintId[1] = RandomCategorial(GetRange(vector, 833, 38), mt);
 

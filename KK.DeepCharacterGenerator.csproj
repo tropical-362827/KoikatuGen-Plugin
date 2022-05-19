@@ -40,9 +40,6 @@
     <Reference Include="KKSAPI">
       <HintPath>packages\IllusionModdingAPI.KKSAPI.1.31.2\lib\net46\KKSAPI.dll</HintPath>
     </Reference>
-    <Reference Include="MathNet.Numerics, Version=4.15.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>packages\MathNet.Numerics.4.15.0\lib\net40\MathNet.Numerics.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -52,12 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="KK.DeepCharacterGenerator.cs" />
-    <Compile Include="MersenneTwister.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="GeneratorBody.cs" />
     <Compile Include="GeneratorFace.cs" />
     <Compile Include="GeneratorHair.cs" />
-    <Compile Include="CalcMatrix.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
