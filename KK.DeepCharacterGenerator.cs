@@ -2,12 +2,11 @@
 using KKAPI;
 using KKAPI.Maker;
 using KKAPI.Maker.UI;
-using System.Collections.Generic;
 using System.IO;
 using System;
-using MathNet.Numerics;
-using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.Distributions;
+using KoikatuGen;
+using Newtonsoft.Json;
 
 namespace KK_Plugins
 {
@@ -38,13 +37,13 @@ namespace KK_Plugins
             string dllpath = System.Reflection.Assembly.GetExecutingAssembly().Location;
             string dlldir = Path.GetDirectoryName(dllpath);
             string paramsdir = System.IO.Path.Combine(dlldir, "params");
-            string[] weightsdir = Directory.GetDirectories(paramsdir);
-            string[] weightsdir_child = new string[weightsdir.Length];
-            for(int i = 0; i < weightsdir.Length; i++)
+            string[] files = Directory.GetFiles(paramsdir, "*.json");
+            string[] files_name = new string[files.Length];
+            for(int i = 0; i < files.Length; i++)
             {
-                weightsdir_child[i] = Path.GetFileName( weightsdir[i] );
+                files_name[i] = Path.GetFileName( files[i] );
             }
-            var paramsDropdown = e.AddControl(new MakerDropdown("使う学習パラメーター", weightsdir_child, cat, 0, this));
+            var paramsDropdown = e.AddControl(new MakerDropdown("使う学習パラメーター", files_name, cat, 0, this));
             var oddeyeToggle = e.AddControl(new MakerToggle(cat, "オッドアイ(非対称な瞳)を許可する", false, this));
             var facepaintToggle = e.AddControl(new MakerToggle(cat, "フェイスペイントの使用を許可する", false, this));
             e.AddControl(new MakerSeparator(cat, this));
@@ -55,31 +54,28 @@ namespace KK_Plugins
 
             randButton.OnClick.AddListener(() =>
             {
-                string choosed_dir = weightsdir[paramsDropdown.Value];
-                Console.WriteLine(choosed_dir);
+                string choosed_file = files[paramsDropdown.Value];
+                base.Logger.LogDebug("Choosed file is: "+choosed_file);
 
                 allowOddeye = oddeyeToggle.Value;
                 allowFacePaint = facepaintToggle.Value;
 
-                double[,] weight = LoadCSV( System.IO.Path.Combine( choosed_dir, "weight.csv" ) );
-                double[,] bias = LoadCSV( System.IO.Path.Combine( choosed_dir, "bias.csv" ) );
+                StreamReader sr = new StreamReader(choosed_file);
+                string str = sr.ReadToEnd();
+                sr.Close();
+                var model_type = JsonConvert.DeserializeObject<GenerativeModel>(str);
 
-                System.Random random = new System.Random();
+                GenerativeModel model = null;
+                if (model_type.type == "VAE")
+                {
+                    model = JsonConvert.DeserializeObject<VAE>(str);
+                }
 
-                var M = Matrix<double>.Build;
-
-                var mu = M.Random(1, 800);
-                var sigma = Matrix<double>.Exp(M.Random(1, 800, new Normal(0, 0.5f)));
-                var epsilon = M.Random(1, 800);
-                var ma = mu + Matrix<double>.Exp(sigma * 0.5).PointwiseMultiply(epsilon);
-                var mb = M.DenseOfArray(weight);
-                var mc = ma * mb + M.DenseOfArray(bias);
-                mc = mc.Map(SpecialFunctions.Logistic);
-
-                float[] kk_vector = new float[mc.ColumnCount];
+                var ret = model.Generate();
+                float[] kk_vector = new float[ret.ColumnCount];
                 for(int i=0; i<kk_vector.Length; i++)
                 {
-                    kk_vector[i] = (float)mc[0, i];
+                    kk_vector[i] = (float)ret[0, i];
                 }
 
                 if (generateBody.Value) GeneratorBody.GenerateBody(kk_vector);
@@ -88,35 +84,6 @@ namespace KK_Plugins
 
                 MakerAPI.GetCharacterControl().Reload();
             });
-        }
-
-        public static double[,] LoadCSV(string filepath)
-        {
-            List<List<double>> matrix_list = new List<List<double>>();
-            StreamReader reader = new StreamReader(filepath, System.Text.Encoding.GetEncoding("UTF-8"));
-
-            while (reader.Peek() >= 0)
-            {
-                string[] cols = reader.ReadLine().Split(',');
-                List<double> row = new List<double>();
-                for (int i = 0; i < cols.Length; i++)
-                {
-                    row.Add(double.Parse(cols[i]));
-                }
-                matrix_list.Add(row);
-            }
-            reader.Close();
-
-            double[,] matrix = new double[matrix_list.Count, matrix_list[0].Count];
-            for (int i = 0; i < matrix.GetLength(0); i++)
-            {
-                for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    matrix[i, j] = matrix_list[i][j];
-                }
-            }
-
-            return matrix;
         }
 
         public static float[] GetRange(float[] array, int start, int count)
