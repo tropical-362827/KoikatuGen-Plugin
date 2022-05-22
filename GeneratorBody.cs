@@ -1,4 +1,5 @@
-﻿using PseudoRandom;
+﻿using KoikatuGen;
+using Newtonsoft.Json.Linq;
 using UnityEngine;
 
 namespace KK_Plugins
@@ -8,71 +9,119 @@ namespace KK_Plugins
         private class GeneratorBody
         {
 
-            public static void GenerateBody(float[] vector)
+            public static void GenerateBody(float[] vector, GenerativeModel model)
             {
                 var body = Custom.body;
-                System.Random random = new System.Random();
-                MersenneTwister mt = new MersenneTwister((ulong)random.Next()); 
-                int n;
 
-                // scalar values
-                n = 8;
-                body.bustSoftness = vector[n++];
-                body.bustWeight = vector[n++];
-                body.detailPower = vector[n++];
-                body.skinGlossPower = vector[n++];
-                body.nipGlossPower = vector[n++];
-                body.areolaSize = vector[n++];
-                body.nailGlossPower = vector[n++];
-                n = 113;
-                float[] shapeValueBody = new float[body.shapeValueBody.Length];
-                for (int i = 0; i < body.shapeValueBody.Length; i++)
+                foreach(var c in model.columns)
                 {
-                    shapeValueBody[i] = vector[n++];
+                    string name = (string)c.name;
+                    if(!name.StartsWith("body")){
+                        continue;
+                    }
+                    int start = (int)c.start;
+                    string type = (string)c.type;
+                    int[] values = null;
+                    if(type == "categorical")
+                    {
+                        JArray array = (JArray)c.values;
+                        values = array.ToObject<int[]>();
+                    }
+                    switch (name)
+                    {
+                        // scalar
+                        case "body_bustSoftness":
+                            body.bustSoftness = vector[start];
+                            break;
+                        case "body_bustWeight":
+                            body.bustWeight = vector[start];
+                            break;
+                        case "body_detailPower":
+                            body.detailPower = vector[start];
+                            break;
+                        case "body_skinGlossPower":
+                            body.skinGlossPower = vector[start];
+                            break;
+                        case "body_nipGlossPower":
+                            body.nipGlossPower = vector[start];
+                            break;
+                        case "body_areolaSize":
+                            body.areolaSize = vector[start];
+                            break;
+                        case "body_nailGlossPower":
+                            body.nailGlossPower = vector[start];
+                            break;
+                        // vector
+                        case "body_shapeValueBody":
+                            for (int i = 0; i < body.shapeValueBody.Length; i++)
+                            {
+                                body.shapeValueBody[i] = vector[start+i];
+                            }
+                            break;
+                        case "body_skinMainColor":
+                            body.skinMainColor = GetColor(vector, start);
+                            break;
+                        case "body_skinSubColor":
+                            body.skinSubColor = GetColor(vector, start);
+                            break;
+                        case "body_sunburnColor":
+                            if (allowBodyPaint) body.sunburnColor = GetColor(vector, start);
+                            break;
+                        case "body_nipColor":
+                            body.nipColor = GetColor(vector, start);
+                            break;
+                        case "body_underhairColor":
+                            body.underhairColor = GetColor(vector, start);
+                            break;
+                        case "body_nailColor":
+                            body.nailColor = GetColor(vector, start);
+                            break;
+                        case "body_paintColor_0":
+                            if(allowBodyPaint) body.paintColor[0] = GetColor(vector, start);
+                            break;
+                        case "body_paintColor_1":
+                            if (allowBodyPaint) body.paintColor[1] = GetColor(vector, start);
+                            break;
+                        case "body_paintLayout_0":
+                            if (allowBodyPaint) body.paintLayout[0] = GetVector(vector, start);
+                            break;
+                        case "body_paintLayout_1":
+                            if (allowBodyPaint) body.paintLayout[1] = GetVector(vector, start);
+                            break;
+                        // categorical
+                        case "body_skinId":
+                            body.skinId = GetCategorical(vector, start, values, name);
+                            break;
+                        case "body_detailId":
+                            if (allowBodyPaint) body.detailId = GetCategorical(vector, start, values, name);
+                            break;
+                        case "body_sunburnId":
+                            if (allowBodyPaint) body.sunburnId = GetCategorical(vector, start, values, name);
+                            break;
+                        case "body_nipId":
+                            body.nipId = GetCategorical(vector, start, values, name);
+                            break;
+                        case "body_underhairId":
+                            body.underhairId = GetCategorical(vector, start, values, name);
+                            break;
+                        case "body_paintId_0":
+                            if (allowBodyPaint) body.paintId[0] = GetCategorical(vector, start, values, name);
+                            break;
+                        case "body_paintId_1":
+                            if (allowBodyPaint) body.paintId[1] = GetCategorical(vector, start, values, name);
+                            break;
+                        case "body_paintLayoutId_0":
+                            if (allowBodyPaint) body.paintLayoutId[0] = GetCategorical(vector, start, values, name);
+                            break;
+                        case "body_paintLayoutId_1":
+                            if (allowBodyPaint) body.paintLayoutId[1] = GetCategorical(vector, start, values, name);
+                            break;
+                        default:
+                            System.Console.WriteLine("unexpected column: " + name);
+                            break;
+                    }
                 }
-                body.shapeValueBody = shapeValueBody;
-
-                // vector values
-                n = 157;
-                body.skinMainColor = new Color( vector[n++], vector[n++], vector[n++], vector[n++] );
-                body.skinSubColor = new Color( vector[n++], vector[n++], vector[n++], vector[n++] );
-                body.sunburnColor = new Color( vector[n++], vector[n++], vector[n++], vector[n++] );
-                body.nipColor = new Color( vector[n++], vector[n++], vector[n++], vector[n++] );
-                body.underhairColor = new Color( vector[n++], vector[n++], vector[n++], vector[n++] );
-                body.nailColor = new Color( vector[n++], vector[n++], vector[n++], vector[n++] );
-                n = 225;
-                // body.paintColor = new Color[] {
-                //     new Color( vector[n++], vector[n++], vector[n++], vector[n++] ),
-                //     new Color( vector[n++], vector[n++], vector[n++], vector[n++] )
-                // };
-                // body.paintLayout = new Vector4[]
-                // {
-                //     new Vector4( vector[n++], vector[n++], vector[n++], vector[n++] ),
-                //     new Vector4( vector[n++], vector[n++], vector[n++], vector[n++] )
-                // };
-
-                // categorical velues
-                body.skinId = RandomCategorial( GetRange( vector, 526, 1 ), mt );
-                body.detailId = RandomCategorial( GetRange( vector, 527, 4 ), mt );
-                body.sunburnId = RandomCategorial( GetRange( vector, 531, 11 ), mt );
-                body.nipId = RandomCategorial( GetRange( vector, 542, 7 ), mt );
-                body.underhairId = RandomCategorial( GetRange( vector, 549, 14 ), mt );
-                // body.paintId = new int[] {
-                //     RandomCategorial( GetRange( vector, 870, 37 ), mt ),
-                //     RandomCategorial( GetRange( vector, 907, 38 ), mt )
-                // };
-                // body.paintLayoutId = new int[]
-                // {
-                //     RandomCategorial( GetRange( vector, 945, 20 ), mt ),
-                //     RandomCategorial( GetRange( vector, 965, 20 ), mt )
-                // };
-
-                // エモクリで加わったpaintIdへの対応.
-                // body.paintId[0] = AdjustEmocreId(body.paintId[0], 34, 166);
-                // body.paintId[1] = AdjustEmocreId(body.paintId[1], 34, 165);
-
             }
-
         }
     }
 }
