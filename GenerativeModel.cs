@@ -11,6 +11,9 @@ namespace KoikatuGen
         [JsonProperty("type")]
         public string type { get; set; }
 
+        [JsonProperty("columns")]
+        public dynamic columns { get; set; }
+
         public virtual Matrix<double> Generate()
         {
             return null;
@@ -34,9 +37,9 @@ namespace KoikatuGen
             }
 
             var M = Matrix<double>.Build;
-            var mu = M.Random(1, 800);
+            var mu = M.Random(1, 800, new Normal(0, 1.0f));
             var sigma = Matrix<double>.Exp(M.Random(1, 800, new Normal(0, 0.5f)));
-            var epsilon = M.Random(1, 800);
+            var epsilon = M.Random(1, 800, new Normal(0, 1.0f));
             var ma = mu + Matrix<double>.Exp(sigma * 0.5).PointwiseMultiply(epsilon);
             var mb = M.DenseOfArray(weight);
             var mc = ma * mb + M.DenseOfArray(bias_);

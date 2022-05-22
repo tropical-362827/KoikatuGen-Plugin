@@ -7,6 +7,7 @@ using System;
 using MathNet.Numerics.Distributions;
 using KoikatuGen;
 using Newtonsoft.Json;
+using UnityEngine;
 
 namespace KK_Plugins
 {
@@ -78,45 +79,32 @@ namespace KK_Plugins
                     kk_vector[i] = (float)ret[0, i];
                 }
 
-                if (generateBody.Value) GeneratorBody.GenerateBody(kk_vector);
-                if (generateFace.Value) GeneratorFace.GenerateFace(kk_vector);
-                if (generateHair.Value) GeneratorHair.GenerateHair(kk_vector);
+                if (generateBody.Value) GeneratorBody.GenerateBody(kk_vector, model);
+                if (generateFace.Value) GeneratorFace.GenerateFace(kk_vector, model);
+                if (generateHair.Value) GeneratorHair.GenerateHair(kk_vector, model);
 
                 MakerAPI.GetCharacterControl().Reload();
             });
         }
 
-        public static float[] GetRange(float[] array, int start, int count)
+        public static Color GetColor(float[] a, int s)
         {
-            float[] subarray = new float[count];
-            for(int i=start; i<count; i++)
-            {
-                subarray[i] = array[i];
-            }
-            return subarray;
+            return new Color(a[s], a[s + 1], a[s + 2], a[s + 3]);
         }
 
-        public static int AdjustEmocreId(int value, int threshold, int offset)
+        public static Vector4 GetVector(float[] a, int s)
         {
-            if( value > threshold )
-            {
-                return value + offset;
-            }
-            else
-            {
-                return value;
-            }
+            return new Vector4(a[s], a[s + 1], a[s + 2], a[s + 3]);
         }
 
-        // generates a sampling value following the categorical distribution.
-        public static int RandomCategorial(float[] vector)
+        public static int GetCategorical(float[] kkvector, int s, int[] categories, string name)
         {
-            double[] vector_ = new double[vector.Length];
-            for(int i=0; i<vector.Length; i++)
+            double[] vector = new double[categories.Length];
+            for (int i = 0; i < categories.Length; i++)
             {
-                vector_[i] = Math.Exp(vector[i]);
+                vector[i] = Math.Exp(kkvector[s+i]);
             }
-            return Categorical.Sample(vector_);
+            return categories[Categorical.Sample(vector)];
         }
 
         #region Random utils
