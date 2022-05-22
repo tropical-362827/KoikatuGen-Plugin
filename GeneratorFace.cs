@@ -99,7 +99,7 @@ namespace KK_Plugins
                             face.eyelineColor = GetColor(vector, start);
                             break;
                         case "face_moleColor":
-                            face.moleColor = GetColor(vector, start);
+                            if (allowFacePaint) face.moleColor = GetColor(vector, start);
                             break;
                         case "face_moleLayout":
                             face.moleLayout = GetVector(vector, start);
@@ -129,20 +129,20 @@ namespace KK_Plugins
                             face.baseMakeup.lipColor = GetColor(vector, start);
                             break;
                         case "face_baseMakeup_paintColor_0":
-                            face.baseMakeup.paintColor[0] = GetColor(vector, start);
+                            if (allowFacePaint) face.baseMakeup.paintColor[0] = GetColor(vector, start);
                             break;
                         case "face_baseMakeup_paintColor_1":
-                            face.baseMakeup.paintColor[1] = GetColor(vector, start);
+                            if (allowFacePaint) face.baseMakeup.paintColor[1] = GetColor(vector, start);
                             break;
                         case "face_baseMakeup_paintLayout_0":
-                            face.baseMakeup.paintLayout[0] = GetVector(vector, start);
+                            if (allowFacePaint) face.baseMakeup.paintLayout[0] = GetVector(vector, start);
                             break;
                         case "face_baseMakeup_paintLayout_1":
-                            face.baseMakeup.paintLayout[1] = GetVector(vector, start);
+                            if (allowFacePaint) face.baseMakeup.paintLayout[1] = GetVector(vector, start);
                             break;
                         // categorical
                         case "face_detailId":
-                            face.detailId = GetCategorical(vector, start, values, name);
+                            if(allowFacePaint) face.detailId = GetCategorical(vector, start, values, name);
                             break;
                         case "face_eyebrowId":
                             face.eyebrowId = GetCategorical(vector, start, values, name);
@@ -166,7 +166,7 @@ namespace KK_Plugins
                             face.eyelineDownId = GetCategorical(vector, start, values, name);
                             break;
                         case "face_moleId":
-                            face.moleId = GetCategorical(vector, start, values, name);
+                            if (allowFacePaint) face.moleId = GetCategorical(vector, start, values, name);
                             break;
                         case "face_lipLineId":
                             face.lipLineId = GetCategorical(vector, start, values, name);
@@ -176,6 +176,21 @@ namespace KK_Plugins
                             break;
                         case "face_foregroundEyebrow":
                             face.foregroundEyebrow = (byte)GetCategorical(vector, start, values, name);
+                            break;
+                        case "face_baseMakeup_eyeshadowId":
+                            face.baseMakeup.eyeshadowId = GetCategorical(vector, start, values, name);
+                            break;
+                        case "face_baseMakeup_cheekId":
+                            face.baseMakeup.cheekId = GetCategorical(vector, start, values, name);
+                            break;
+                        case "face_baseMakeup_lipId":
+                            face.baseMakeup.lipId = GetCategorical(vector, start, values, name);
+                            break;
+                        case "face_baseMakeup_paintId_0":
+                            if (allowFacePaint) face.baseMakeup.paintId[0] = GetCategorical(vector, start, values, name);
+                            break;
+                        case "face_baseMakeup_paintId_1":
+                            if (allowFacePaint) face.baseMakeup.paintId[1] = GetCategorical(vector, start, values, name);
                             break;
                         default:
                             System.Console.WriteLine("unexpected column: " + name);

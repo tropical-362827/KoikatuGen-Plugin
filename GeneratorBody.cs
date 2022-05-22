@@ -65,7 +65,7 @@ namespace KK_Plugins
                             body.skinSubColor = GetColor(vector, start);
                             break;
                         case "body_sunburnColor":
-                            body.sunburnColor = GetColor(vector, start);
+                            if (allowBodyPaint) body.sunburnColor = GetColor(vector, start);
                             break;
                         case "body_nipColor":
                             body.nipColor = GetColor(vector, start);
@@ -77,26 +77,26 @@ namespace KK_Plugins
                             body.nailColor = GetColor(vector, start);
                             break;
                         case "body_paintColor_0":
-                            // body.paintColor[0] = GetColor(vector, start);
+                            if(allowBodyPaint) body.paintColor[0] = GetColor(vector, start);
                             break;
                         case "body_paintColor_1":
-                            // body.paintColor[1] = GetColor(vector, start);
+                            if (allowBodyPaint) body.paintColor[1] = GetColor(vector, start);
                             break;
                         case "body_paintLayout_0":
-                            // body.paintLayout[0] = GetVector(vector, start);
+                            if (allowBodyPaint) body.paintLayout[0] = GetVector(vector, start);
                             break;
                         case "body_paintLayout_1":
-                            // body.paintLayout[1] = GetVector(vector, start);
+                            if (allowBodyPaint) body.paintLayout[1] = GetVector(vector, start);
                             break;
                         // categorical
                         case "body_skinId":
                             body.skinId = GetCategorical(vector, start, values, name);
                             break;
                         case "body_detailId":
-                            body.detailId = GetCategorical(vector, start, values, name);
+                            if (allowBodyPaint) body.detailId = GetCategorical(vector, start, values, name);
                             break;
                         case "body_sunburnId":
-                            body.sunburnId = GetCategorical(vector, start, values, name);
+                            if (allowBodyPaint) body.sunburnId = GetCategorical(vector, start, values, name);
                             break;
                         case "body_nipId":
                             body.nipId = GetCategorical(vector, start, values, name);
@@ -105,16 +105,16 @@ namespace KK_Plugins
                             body.underhairId = GetCategorical(vector, start, values, name);
                             break;
                         case "body_paintId_0":
-                            // body.paintId[0] = GetCategorical(vector, start, values, name);
+                            if (allowBodyPaint) body.paintId[0] = GetCategorical(vector, start, values, name);
                             break;
                         case "body_paintId_1":
-                            // body.paintId[1] = GetCategorical(vector, start, values, name);
+                            if (allowBodyPaint) body.paintId[1] = GetCategorical(vector, start, values, name);
                             break;
                         case "body_paintLayoutId_0":
-                            // body.paintLayoutId[0] = GetCategorical(vector, start, values, name);
+                            if (allowBodyPaint) body.paintLayoutId[0] = GetCategorical(vector, start, values, name);
                             break;
                         case "body_paintLayoutId_1":
-                            // body.paintLayoutId[1] = GetCategorical(vector, start, values, name);
+                            if (allowBodyPaint) body.paintLayoutId[1] = GetCategorical(vector, start, values, name);
                             break;
                         default:
                             System.Console.WriteLine("unexpected column: " + name);

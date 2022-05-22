@@ -47,6 +47,7 @@ namespace KK_Plugins
             var paramsDropdown = e.AddControl(new MakerDropdown("使う学習パラメーター", files_name, cat, 0, this));
             var oddeyeToggle = e.AddControl(new MakerToggle(cat, "オッドアイ(非対称な瞳)を許可する", false, this));
             var facepaintToggle = e.AddControl(new MakerToggle(cat, "フェイスペイントの使用を許可する", false, this));
+            var bodypaintToggle = e.AddControl(new MakerToggle(cat, "ボディペイントの使用を許可する", false, this));
             e.AddControl(new MakerSeparator(cat, this));
             var generateBody = e.AddControl(new MakerToggle(cat, "体型の変更を許可する", true, this));
             var generateFace = e.AddControl(new MakerToggle(cat, "顔の変更を許可する", true, this));
@@ -60,6 +61,7 @@ namespace KK_Plugins
 
                 allowOddeye = oddeyeToggle.Value;
                 allowFacePaint = facepaintToggle.Value;
+                allowBodyPaint = bodypaintToggle.Value;
 
                 StreamReader sr = new StreamReader(choosed_file);
                 string str = sr.ReadToEnd();
@@ -113,6 +115,7 @@ namespace KK_Plugins
         public static ChaFileCustom Custom => Chararacter.custom;
         public static bool allowOddeye;
         public static bool allowFacePaint;
+        public static bool allowBodyPaint;
 
         #endregion
     }
